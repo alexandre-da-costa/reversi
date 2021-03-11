@@ -8,6 +8,15 @@ import time
 
 ply_alpha=9
 
+WEIGHTS = [4, -3, 2, 2, 2, 2, -3, 4,
+               -3, -4, -1, -1, -1, -1, -4, -3,
+               2, -1, 1, 0, 0, 1, -1, 2,
+               2, -1, 0, 1, 1, 0, -1, 2,
+               2, -1, 0, 1, 1, 0, -1, 2,
+               2, -1, 1, 0, 0, 1, -1, 2,
+               -3, -4, -1, -1, -1, -1, -4, -3,
+               4, -3, 2, 2, 2, 2, -3, 4]
+
 def mobility(color,the_board):
     return_score=0
     player_moves= len(the_board.legal_moves(color))
@@ -17,9 +26,20 @@ def mobility(color,the_board):
     return return_score
 
 
-def heuristic(color,the_board):
-    return mobility(color,the_board)
+def cornerweight(color, the_board):
+    total = 0
+    i = 0
+    while i < 64:
+        if the_board.tiles[int(i/8)][int(i%8)] == color:
+            total += WEIGHTS[i]
+        if the_board.tiles[int(i/8)][int(i%8)] == the_board.opponent(color):
+            total -= WEIGHTS[i]
+        i += 1
+    return total
 
+def heuristic(color,the_board):
+    #return mobility(color,the_board)
+    return cornerweight(color,the_board)
 
 def minimax_ab(color,the_board,ply):
     moves=the_board.legal_moves(color)
@@ -81,6 +101,5 @@ if __name__ == '__main__':
     f = open('move.txt', 'w')
     f.write('%d,%d' % make_move(b, sys.argv[2]))
     f.close()
-
+    
     print("--- %s seconds ---" % (time.time() - start_time))
-
