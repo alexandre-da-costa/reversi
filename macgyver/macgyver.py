@@ -3,8 +3,10 @@ import random
 sys.path.append('..')
 from common import board
 from copy import deepcopy
+import time
 
-ply_alpha=4
+
+ply_alpha=9
 
 def mobility(color,the_board):
     return_score=0
@@ -73,7 +75,12 @@ def make_move(the_board, color):
     return minimax_ab(color,the_board,ply_alpha) if len(legal_moves) > 0 else (-1, -1)
 
 if __name__ == '__main__':
+    start_time = time.time()
+
     b = board.from_file(sys.argv[1])
     f = open('move.txt', 'w')
     f.write('%d,%d' % make_move(b, sys.argv[2]))
     f.close()
+
+    print("--- %s seconds ---" % (time.time() - start_time))
+
