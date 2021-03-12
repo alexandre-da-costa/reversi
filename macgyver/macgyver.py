@@ -6,8 +6,9 @@ from copy import deepcopy
 import time
 
 
-ply_alpha=9
+ply_alpha=4
 
+#Static Weights Heuristic Function 
 WEIGHTS = [4, -3, 2, 2, 2, 2, -3, 4,
                -3, -4, -1, -1, -1, -1, -4, -3,
                2, -1, 1, 0, 0, 1, -1, 2,
@@ -17,16 +18,11 @@ WEIGHTS = [4, -3, 2, 2, 2, 2, -3, 4,
                -3, -4, -1, -1, -1, -1, -4, -3,
                4, -3, 2, 2, 2, 2, -3, 4]
 
-def mobility(color,the_board):
-    return_score=0
-    player_moves= len(the_board.legal_moves(color))
-    opponent_moves= len(the_board.legal_moves(the_board.opponent(color)))
-    if (player_moves + opponent_moves != 0):
-	    return_score=100 * (player_moves - opponent_moves) / (player_moves + opponent_moves)
-    return return_score
-
-
 def cornerweight(color, the_board):
+    """
+    Returns the heuristic following the static weights heuristic function.
+    :return: float
+    """
     total = 0
     i = 0
     while i < 64:
@@ -38,10 +34,13 @@ def cornerweight(color, the_board):
     return total
 
 def heuristic(color,the_board):
-    #return mobility(color,the_board)
     return cornerweight(color,the_board)
 
 def minimax_ab(color,the_board,ply):
+    """
+    Returns a move following minimax with alpha and beta from the list of possible ones
+    :return: (int, int)
+    """
     moves=the_board.legal_moves(color)
     bestscore  = float('-inf')
     return_move=moves[0]
@@ -54,7 +53,11 @@ def minimax_ab(color,the_board,ply):
             return_move=move
     return return_move
     
-def max_value(color, alpha, beta, the_board,ply):    
+def max_value(color, alpha, beta, the_board,ply):
+    """
+    Returns a max utility valor for minimax
+    :return: float
+    """
     if len(the_board.legal_moves(color))==0 or ply==0:
         return heuristic(color,the_board)
     bestscore = float('-inf')
@@ -70,6 +73,10 @@ def max_value(color, alpha, beta, the_board,ply):
     return bestscore
     
 def min_value(color, alpha, beta, the_board,ply):
+    """
+    Returns a min utility valor for minimax
+    :return: float
+    """
     if len(the_board.legal_moves(color))==0 or ply==0:
         return heuristic(color,the_board)
        
